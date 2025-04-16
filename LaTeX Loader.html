@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LaTeX Loader</title>
+
+  <!-- Load MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\', '\']],
+        displayMath: [['\', '\']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+  <!-- Styling -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f9f9f9;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      font-size: 16px;
+      padding: 10px;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    #output {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      max-width: 100%;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .latex-block {
+      flex: 1 1 300px;
+      min-width: 200px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <h1>LaTeX Loader</h1>
+  <p>Masukkan kode LaTeX di bawah ini (pisahkan tiap baris untuk barisan baru):</p>
+  <textarea id="latexInput">\int_0^1 x^2 \, dx = \frac{1}{3}</textarea>
+  <br>
+  <button onclick="renderLatex()">Render</button>
+
+  <div id="output"></div>
+
+  <script>
+    function renderLatex() {
+      const input = document.getElementById("latexInput").value;
+      const lines = input.split('\n').filter(line => line.trim() !== '');
+      const output = document.getElementById("output");
+      output.innerHTML = '';
+
+      lines.forEach(line => {
+        const div = document.createElement('div');
+        div.className = 'latex-block';
+        div.innerHTML = `\${line}\`;
+        output.appendChild(div);
+      });
+
+      if (window.MathJax) {
+        MathJax.typesetPromise([output]).catch((err) => console.error(err.message));
+      } else {
+        console.error("MathJax belum dimuat.");
+      }
+    }
+  </script>
+</body>
+</html>
